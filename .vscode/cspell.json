@@ -1,0 +1,14 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": [
+        "datepicker",
+        "devkit",
+        "titlecase",
+        "toastr"
+    ],
+    "ignoreWords": [],
+    "import": []
+}

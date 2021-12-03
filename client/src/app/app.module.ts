@@ -45,7 +45,6 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     BrowserAnimationsModule,
     FormsModule,
     SharedModule,
-    NgxSpinnerModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

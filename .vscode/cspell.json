@@ -4,8 +4,11 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "Cloudinary",
         "datepicker",
         "devkit",
+        "hmac",
+        "HMACSHA",
         "tabset",
         "titlecase",
         "toastr"

@@ -42,12 +42,7 @@ namespace API.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new UserDto
-            {
-                Username = user.UserName,
-                Token = _tokenService.CreateToken(user),
-                KnownAs = user.KnownAs,
-            };
+            return NewUserDto(user);
         }
 
 
@@ -70,12 +65,18 @@ namespace API.Controllers
                     return Unauthorized("Incorrect password");
             }
 
+            return NewUserDto(user);
+        }
+
+        private ActionResult<UserDto> NewUserDto(AppUser user)
+        {
             return new UserDto
             {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                PhotoUrl = user.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
                 KnownAs = user.KnownAs,
+                Gender = user.Gender,
             };
         }
 

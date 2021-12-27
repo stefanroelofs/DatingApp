@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -25,16 +26,31 @@ namespace API.Data
         public async Task<MemberDto> GetMemberAsync(string username)
         {
             return await _context.Users
-                .Where(x=>x.UserName == username)
+                .Where(x => x.UserName == username)
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            return await _context.Users
+            var query = (from user in _context.Users.AsQueryable()
+                         where user.UserName != userParams.CurrentUsername
+                         where user.Gender == userParams.Gender
+                         let minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1)
+                         let maxDob = DateTime.Today.AddYears(-userParams.MinAge)
+                         where user.DateOfBirth >= minDob
+                         where user.DateOfBirth <= maxDob
+                         select user)
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .AsNoTracking();
+
+            query = userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(x => x.Created),
+                _ => query.OrderByDescending(x => x.LastActive)
+            };
+
+            return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)
@@ -47,7 +63,7 @@ namespace API.Data
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
             return await _context.Users
-                .Include(p=>p.Photos)
+                .Include(p => p.Photos)
                 .SingleOrDefaultAsync(x => x.UserName == username);
         }
 

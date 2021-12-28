@@ -9,7 +9,7 @@ namespace API.Entities
         public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         public string KnownAs { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime LastActive { get; set; } = DateTime.Now;
@@ -23,7 +23,7 @@ namespace API.Entities
 
         // List of users that like the currently logged in user
         public ICollection<UserLike> LikedByUsers { get; set; }
-        
+
         // List of users the currently logged in user has liked
         public ICollection<UserLike> LikedUsers { get; set; }
 

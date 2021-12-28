@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
@@ -36,8 +31,8 @@ namespace API.Data
             var query = (from user in _context.Users.AsQueryable()
                          where user.UserName != userParams.CurrentUsername
                          where user.Gender == userParams.Gender
-                         let minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1)
-                         let maxDob = DateTime.Today.AddYears(-userParams.MinAge)
+                         let minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1))
+                         let maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge))
                          where user.DateOfBirth >= minDob
                          where user.DateOfBirth <= maxDob
                          select user)

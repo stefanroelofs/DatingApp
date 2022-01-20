@@ -18,7 +18,7 @@ export class PhotoEditorComponent implements OnInit {
   uploader!: FileUploader;
   hasBaseDropzoneOver = false;
   baseUrl = environment.apiUrl;
-  user!: User;
+  user?: User;
 
   constructor(private accountService: AccountService, private memberService: MembersService) {
     accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
@@ -34,8 +34,8 @@ export class PhotoEditorComponent implements OnInit {
 
   setMainPhoto(photo: Photo) {
     this.memberService.setMainPhoto(photo.id).subscribe(() => {
-      this.user.photoUrl = photo.url;
-      this.accountService.setCurrentUser(this.user);
+      this.user!.photoUrl = photo.url;
+      this.accountService.setCurrentUser(this.user!);
       this.member.photoUrl = photo.url;
       this.member.photos.forEach(p => {
         if (p.isMain)
@@ -55,7 +55,7 @@ export class PhotoEditorComponent implements OnInit {
   initializeUploader() {
     this.uploader = new FileUploader({
       url: this.baseUrl + 'users/add-photo',
-      authToken: 'Bearer ' + this.user.token,
+      authToken: 'Bearer ' + this.user!.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
@@ -72,12 +72,11 @@ export class PhotoEditorComponent implements OnInit {
         const photo: Photo = JSON.parse(response);
         this.member.photos.push(photo);
         if (photo.isMain){
-          this.user.photoUrl = photo.url;
+          this.user!.photoUrl = photo.url;
           this.member.photoUrl = photo.url;
-          this.accountService.setCurrentUser(this.user);
+          this.accountService.setCurrentUser(this.user!);
         }
       }
     }
   }
-
 }

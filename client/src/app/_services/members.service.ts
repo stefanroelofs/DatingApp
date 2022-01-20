@@ -22,7 +22,7 @@ export class MembersService {
   constructor(private http: HttpClient, private accountService: AccountService) {
     accountService.currentUser$.pipe(take(1)).subscribe(user => {
       this.user = user;
-      this.userParams = new UserParams(user);
+      this.userParams = new UserParams(user!);
     });
   }
 
